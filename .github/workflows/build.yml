@@ -1,5 +1,7 @@
 name: Build APK
 on: [push, workflow_dispatch]
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -11,5 +13,9 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with: { gradle-version: 8.7 }
       - run: cd JarvisAcess && gradle assembleDebug --no-daemon
-      - uses: actions/upload-artifact@v4
-        with: { name: JarvisAcess-APK, path: JarvisAcess/app/build/outputs/apk/debug/app-debug.apk }
+      - run: cp JarvisAcess/app/build/outputs/apk/debug/app-debug.apk JarvisAcess.apk
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1
+          name: Jarvis Acess
+          files: JarvisAcess.apk
